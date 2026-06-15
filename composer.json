@@ -1,0 +1,23 @@
+{
+    "name": "pancake423/laravel-sfr",
+    "description": "Static Form Requests for Laravel: a simple, clean alternative to FormRequests.",
+    "type": "library",
+    "license": "MIT",
+    "version": "1.0.0",
+    "autoload": {
+        "psr-4": {
+            "Pancake423\\StaticFormRequest\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "William Jackson",
+            "email": "wjackson@wxj.me"
+        }
+    ],
+    "require": {
+      "php": "^8.0",
+      "illuminate/http": "*",
+      "illuminate/support": "*"
+    }
+}
