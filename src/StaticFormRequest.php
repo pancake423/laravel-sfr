@@ -20,6 +20,10 @@ class StaticFormRequest
 
     public function __construct()
     {
+        // This is a hacky solution to ensure that the FormWrapper
+        // knows about this object BEFORE validation gets run. there
+        // is probably a "more correct" way to do this in a service
+        // provider, but this works for now.
         FormWrapper::bind($this);
         $this->_wrapper = App::make(FormWrapper::class);
         $this->validated();
@@ -51,13 +55,9 @@ class StaticFormRequest
         // iterate over the public properies of this class
         $ref = new ReflectionClass($this);
         foreach ($this->getPropsWithAttr(Validate::class) as $prop) {
-            $name = $prop->getName();
-            $attributes = $prop->getAttributes(Validate::class);
-
             $rule = [];
-            foreach ($attributes as $attr) {
-                $args = $attr->getArguments();
-                foreach ($args as $arg) {
+            foreach ($prop->getAttributes(Validate::class) as $attr) {
+                foreach ($attr->getArguments() as $arg) {
                     if (is_array($arg)) {
                         $rule = [...$rule, ...$arg];
                     } else {
@@ -65,8 +65,7 @@ class StaticFormRequest
                     }
                 }
             }
-
-            $rules[$name] = $rule;
+            $rules[$prop->getName()] = $rule;
         }
         return $rules;
     }
@@ -82,12 +81,8 @@ class StaticFormRequest
         // iterate over the public properies of this class
         $ref = new ReflectionClass($this);
         foreach ($this->getPropsWithAttr(Message::class) as $prop) {
-            $name = $prop->getName();
-            $attributes = $prop->getAttributes(Message::class);
-
-            foreach ($attributes as $attr) {
-                $args = $attr->getArguments();
-                foreach ($args as $arg) {
+            foreach ($prop->getAttributes(Message::class) as $attr) {
+                foreach ($attr->getArguments() as $arg) {
                     $messages = array_merge($messages, $arg);
                 }
             }
@@ -98,13 +93,8 @@ class StaticFormRequest
 
     public function validated()
     {
-        $validated = $this->_wrapper->validated();
         $ref = new ReflectionClass($this);
-
-        // TODO: error handling.
-        // the type of the validation rule doesn't match the type of the variable
-
-        foreach ($validated as $key => $value) {
+        foreach ($this->_wrapper->validated() as $key => $value) {
             $ref->getProperty($key)->setValue($this, $value);
         }
         return $this;
@@ -112,8 +102,10 @@ class StaticFormRequest
 
     /**
      * returns the array representation of this object.
+     *
+     * @return array<string, mixed>
      */
-    public function asArray(): mixed
+    public function toArray()
     {
         return $this->_wrapper->validated();
     }

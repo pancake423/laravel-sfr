@@ -3,7 +3,7 @@
     "description": "Static Form Requests for Laravel: a simple, clean alternative to FormRequests.",
     "type": "library",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "autoload": {
         "psr-4": {
             "Pancake423\\StaticFormRequest\\": "src/"

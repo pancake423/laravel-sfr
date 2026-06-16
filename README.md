@@ -1,5 +1,7 @@
 # Static Form Requests for Laravel
 
+Streamline your API request validation and ensure type safety.
+
 Laravel form requests are powerful, but getting back validated data in an array is messy.
 You end up with array key strings in your controllers, which are vague and error prone.
 
@@ -8,12 +10,12 @@ what fields exist on your controllers, and what types they are. Happy IDE = less
 happy developer.
 
 Note that this might not be a suitable replacement for all FormRequests, as it is just designed
-to streamline basic use cases.
+to streamline basic use cases. It is best suited for simple API requests.
 
 ## How To Use
 
 This project takes advantage of PHP8's Attributes to achieve simple, minimalistic code. Anyone who
-has worked with Livewire will find the syntax familiar..
+has worked with Livewire will find the syntax familiar.
 
 For example, here's what a login request might look like with SimpleFormRequest:
 
@@ -75,7 +77,8 @@ class AuthController extends Controller {
 ## Caveats
 
 Can't handle all use cases for FormRequests (yet?). Nested fields won't work, and array data might not behave well.
-Additionally, if you use extra validation steps (`prepareForValidation()`, )
+Additionally, if you use extra validation steps (`prepareForValidation()` or similar), those won't work. Other keys
+defined on a FormRequest, like $redirect, also won't work. But, it makes the easy cases really pretty :)
 
 ## How To Install
 
